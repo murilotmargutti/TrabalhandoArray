@@ -24,6 +24,7 @@ const KEY_ACTION = {
   Escape: 'B', Backspace: 'B', KeyB: 'B',
   KeyX: 'X', KeyY: 'Y',
   KeyQ: 'LB', KeyE: 'RB',
+  KeyC: 'LT',
   Tab: 'START',
 };
 

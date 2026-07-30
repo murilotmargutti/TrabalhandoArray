@@ -25,6 +25,7 @@ uniform mat4 uViewProj;
 uniform vec3 uChunkOrigin;
 uniform vec3 uCamPos;
 uniform vec3 uBlockColor[${BLOCK_COUNT}];
+uniform float uShadeLift;
 
 out vec2 vUV;
 out float vShade;
@@ -35,7 +36,13 @@ void main() {
   vec3 world = aPos + uChunkOrigin;
   gl_Position = uViewProj * vec4(world, 1.0);
   vUV = aUV;
-  vShade = aShade;
+  // Levanta o piso do sombreamento na direção do branco. Num painel IPS de
+  // ~300 nits o preto é acinzentado e os tons escuros se juntam num borrão: a
+  // face de baixo de um bloco chega a 0,30 do tom e some. Levantar o piso mantém
+  // os degraus dentro da faixa que a TV consegue mostrar. É uniform, e não valor
+  // assado na malha, justamente para dar para comparar A/B na TV sem remontar
+  // geometria nenhuma.
+  vShade = aShade + (1.0 - aShade) * uShadeLift;
   vTint = uBlockColor[int(aType)];
   vDist = length(world - uCamPos);
 }`;
@@ -126,7 +133,8 @@ export class Renderer {
     this.program = this._buildProgram();
     this.uniforms = {};
     for (const name of ['uViewProj', 'uChunkOrigin', 'uCamPos', 'uBlockColor',
-                        'uAtlas', 'uFogColor', 'uFogStart', 'uFogEnd', 'uAlpha']) {
+                        'uAtlas', 'uFogColor', 'uFogStart', 'uFogEnd', 'uAlpha',
+                        'uShadeLift']) {
       this.uniforms[name] = gl.getUniformLocation(this.program, name);
     }
     this.attribs = {
@@ -140,6 +148,7 @@ export class Renderer {
     this.blockColors = new Float32Array(BLOCK_COUNT * 3);
     this.fogColor = new Float32Array(3);
     this.clearColor = [0, 0, 0];
+    this.shadeLift = 0;
 
     this.proj = new Float32Array(16);
     this.view = new Float32Array(16);
@@ -309,6 +318,7 @@ export class Renderer {
     gl.uniform3fv(this.uniforms.uCamPos, camera.pos);
     gl.uniform3fv(this.uniforms.uBlockColor, this.blockColors);
     gl.uniform3fv(this.uniforms.uFogColor, this.fogColor);
+    gl.uniform1f(this.uniforms.uShadeLift, this.shadeLift);
     gl.uniform1f(this.uniforms.uFogStart, drawDistance * 0.55);
     gl.uniform1f(this.uniforms.uFogEnd, drawDistance);
 

@@ -13,7 +13,8 @@ retroiluminação direta, abaixo dos QNED e bem abaixo dos OLED.
 |---|---|---|
 | Processador | α7 AI Processor 4K Gen8 | confere com o que já foi levantado |
 | Painel | 4K 3840×2160, **60 Hz nativo** | **60 FPS é o teto absoluto.** Só existem dois alvos sensatos: 60 ou 30 |
-| Tipo de painel | IPS nos tamanhos ímpares (43/55/65/75/85), VA nos pares (50/60/70/86) | decide contraste e ângulo de visão — afeta as paletas |
+| Tamanho | **55"** | tamanho ímpar, logo **painel IPS** |
+| Tipo de painel | **IPS** (ímpares: 43/55/65/75/85; VA nos pares) | contraste baixo e preto acinzentado, mas cor estável fora do eixo |
 | Brilho | 300 a 350 nits, 89% de DCI-P3 | pastel vai aparecer **mais lavado** do que num monitor |
 | **Bluetooth** | **5.0** | pareamento do controle está resolvido |
 | HDMI | 3 portas, 2.0 | irrelevante para o jogo |
@@ -49,13 +50,39 @@ empatado com o de memória.** A pesquisa não resolveu nem um nem outro.
    Numa TV de entrada, gastar o dobro de pixels para uma imagem que o
    escalonador da própria LG reconstrói bem é o pior negócio disponível.
 3. **As paletas precisam de validação no painel, não no monitor.** Com 300–350
-   nits, 89% de DCI-P3 e possivelmente IPS (contraste baixo, preto acinzentado),
-   tons pastel próximos entre si tendem a se achatar num borrão. O tema **Nuvem**
-   era o caso mais exposto — todos os blocos ficavam entre 0,66 e 1,00 de valor —
-   e por isso teve a faixa alargada antes mesmo de ir para a TV.
-4. **Ângulo de visão importa mais do que eu suporia.** Criança joga do sofá, de
-   lado, deitada no chão. Se for um tamanho ímpar, o painel é IPS e isso é uma
-   boa notícia: IPS perde contraste mas mantém a cor fora do eixo.
+   nits, 89% de DCI-P3 e painel IPS, tons pastel próximos entre si tendem a se
+   achatar num borrão. O tema **Nuvem** era o caso mais exposto — todos os blocos
+   ficavam entre 0,66 e 1,00 de valor — e por isso teve a faixa alargada antes
+   mesmo de ir para a TV.
+4. **IPS é boa notícia para o uso real.** Criança joga do sofá, de lado, deitada
+   no chão. IPS perde contraste mas mantém a cor fora do eixo, que é exatamente
+   a troca que interessa aqui.
+
+### O problema do sombreamento escuro, e como ele foi tratado
+
+O renderizador transmite a forma dos blocos por sombreamento assado: oclusão de
+ambiente de 0,55 a 1,00 multiplicada pela orientação da face, que vai de 0,55 na
+face de baixo a 1,00 no topo. No pior caso isso dá **0,30 do tom do bloco**.
+
+Num painel IPS de ~300 nits, com preto acinzentado e numa sala iluminada, 0,30 e
+0,35 aparecem como o mesmo cinza. O efeito prático é que os cantos escuros de uma
+construção perdem a forma — justamente onde a criança precisa ver que existe um
+canto.
+
+Adivinhar o valor certo no monitor seria errar de um lado ou do outro: levantar
+pouco não resolve, levantar muito achata o volume e a construção fica sem relevo.
+Então o app da Fase 0 ganhou **três níveis de sombreamento comparáveis na própria
+TV** (botão LT, ou tecla C):
+
+| nível | piso levantado | pior caso resultante |
+|---|---|---|
+| padrão (monitor) | 0,00 | 0,30 |
+| médio | 0,20 | 0,44 |
+| painel claro (IPS) | 0,35 | 0,55 |
+
+É um `uniform` no shader, não valor assado na malha — trocar não reconstrói
+geometria nenhuma, então dá para alternar olhando a tela e decidir na hora. A
+mesma escolha de arquitetura que tornou os temas baratos.
 
 ## Resumo
 

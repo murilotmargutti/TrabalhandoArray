@@ -32,6 +32,7 @@ Teclado (para testar sem controle):
 | Enter | inicia ou para o teste automático |
 | X | troca a resolução de render |
 | Y | troca o tema |
+| C | troca o contraste do sombreamento |
 | B | mostra / esconde os painéis |
 | Q / E | menos / mais chunks |
 
@@ -112,6 +113,28 @@ O que a tabela responde:
   raio bem maior com imagem aceitável na TV, o jogo nasce em 720p.
 - **"teto do heap"** diz quanta memória o app tem. Isso limita quantos chunks
   podem ficar carregados de uma vez.
+
+### Escolher o contraste do sombreamento
+
+A TV é uma UA8550 de 55", ou seja **painel IPS**: contraste baixo e preto
+acinzentado. O renderizador passa a forma dos blocos por sombreamento assado, e no
+pior caso (face de baixo, canto ocluído) isso chega a **0,30 do tom do bloco** —
+que num IPS de 300 nits, em sala iluminada, se junta com qualquer outro tom
+escuro. O resultado é canto de construção sem forma.
+
+Aperte **LT** (ou **C**) para alternar entre os três níveis e **olhe a tela**:
+
+1. **padrão (monitor)** — piso em 0,30. Provavelmente escuro demais na TV.
+2. **médio** — piso em 0,44.
+3. **painel claro (IPS)** — piso em 0,55.
+
+O certo é o nível mais baixo em que **ainda se distingue o canto de um bloco na
+sombra**. Levantar demais achata o volume e a construção perde relevo; levantar de
+menos não resolve nada. Esse é um julgamento visual que só a TV responde — anote
+qual venceu, porque vira o padrão do jogo.
+
+Vale repetir o teste com o tema **Nuvem**, que é o mais exposto (tudo claro), e com
+a **Floresta Mágica**, que é o mais escuro.
 
 Anote também, do painel "Entrada / Controle":
 

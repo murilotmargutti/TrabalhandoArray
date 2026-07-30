@@ -28,6 +28,16 @@ const RENDER_SCALES = [
   { scale: 0.5,     label: '960x540 (TV amplia)' },
 ];
 
+// Quanto o piso do sombreamento sobe na direção do branco. A UA8550 de 55" é
+// painel IPS: contraste baixo e preto acinzentado, então os tons escuros se
+// juntam. Qual desses três valores é o certo não se decide no monitor — decide-se
+// olhando a TV, e é para isso que existe o ajuste.
+const SHADE_LIFTS = [
+  { lift: 0.00, label: 'padrão (monitor)' },
+  { lift: 0.20, label: 'médio' },
+  { lift: 0.35, label: 'painel claro (IPS)' },
+];
+
 const MOVE_SPEED = 16;      // blocos por segundo
 const LOOK_SPEED = 2.2;     // radianos por segundo
 const MESH_BUDGET_PER_FRAME = 4;
@@ -74,6 +84,7 @@ const input = new Input();
 const state = {
   themeIndex: 0,
   scaleIndex: 1,          // começa em 720p: é a aposta do projeto, então é o padrão a validar
+  liftIndex: 0,
   radius: 3,
   panelsVisible: true,
   camera: { pos: new Float32Array([8, 0, 8]), yaw: 0.6, pitch: -0.28 },
@@ -194,6 +205,10 @@ function handleActions() {
     state.panelsVisible = !state.panelsVisible;
     for (const panel of el.panels) panel.classList.toggle('hidden', !state.panelsVisible);
   }
+  if (input.pressed('LT')) {
+    state.liftIndex = (state.liftIndex + 1) % SHADE_LIFTS.length;
+    renderer.shadeLift = SHADE_LIFTS[state.liftIndex].lift;
+  }
   if (input.pressed('LB')) setRadius(state.radius - 1);
   if (input.pressed('RB')) setRadius(state.radius + 1);
 }
@@ -216,6 +231,7 @@ function drawStats() {
   html += row('FPS', state.fps.toFixed(0), fpsClass(state.fps));
   html += row('tempo/quadro', `${state.frameMs.toFixed(1)} ms`);
   html += row('render', RENDER_SCALES[state.scaleIndex].label);
+  html += row('sombreamento', SHADE_LIFTS[state.liftIndex].label);
   html += row('raio de chunks', state.radius);
   html += row('chunks carregados', state.loaded.size);
   html += row('chunks visíveis', stats.visibleChunks ?? 0);
