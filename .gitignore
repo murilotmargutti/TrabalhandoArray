@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+*.ipk
+.DS_Store
+.env
+.env.local
+.idea/
+.vscode/
+target/
+*.log
