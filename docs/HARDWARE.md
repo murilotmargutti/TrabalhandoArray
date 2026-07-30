@@ -4,6 +4,59 @@ Levantamento feito para calibrar o escopo antes de rodar a Fase 0 no aparelho.
 Cada item vem marcado com o grau de confiança, porque a diferença entre "a ARM
 publicou" e "um site de análise deduziu" muda o quanto vale apostar nisso.
 
+## O aparelho: LG UA8550 (2025)
+
+Modelo confirmado. É a **linha de entrada 4K da LG em 2025** — UHD com LED de
+retroiluminação direta, abaixo dos QNED e bem abaixo dos OLED.
+
+| item | valor | por que importa |
+|---|---|---|
+| Processador | α7 AI Processor 4K Gen8 | confere com o que já foi levantado |
+| Painel | 4K 3840×2160, **60 Hz nativo** | **60 FPS é o teto absoluto.** Só existem dois alvos sensatos: 60 ou 30 |
+| Tipo de painel | IPS nos tamanhos ímpares (43/55/65/75/85), VA nos pares (50/60/70/86) | decide contraste e ângulo de visão — afeta as paletas |
+| Brilho | 300 a 350 nits, 89% de DCI-P3 | pastel vai aparecer **mais lavado** do que num monitor |
+| **Bluetooth** | **5.0** | pareamento do controle está resolvido |
+| HDMI | 3 portas, 2.0 | irrelevante para o jogo |
+| Jogos | ALLM, Game Optimizer, VRR até 60 Hz | nada a fazer: o app web fica preso ao vsync de 60 |
+
+Fontes: [LG UA85 (LG Egito)](https://www.lg.com/eg_en/tv-soundbars/uhd-4k-tvs/55ua85006la/),
+[review com tabela de especificações](https://promotop.net/blog/lg-ua8550-uhd-2025-vale-a-pena-review-completo-pros-e-contras-tabela-de-especificacoes-e-dicas-de-configuracao/),
+[Zoom](https://www.zoom.com.br/tv/deumzoom/review-tv-lg-ua8550),
+[Review Smart TVs](https://reviewsmarttvs.com.br/smart-tv-lg-ua8550-vale-a-pena/).
+
+### Correção ao otimismo da seção anterior
+
+O levantamento abaixo concluiu que a GPU provavelmente daria conta, apoiado no par
+Cortex-A78 + Mali-G510 que a ARM associa às TVs **OLED** da LG. Sabendo agora que
+o aparelho é a **linha de entrada**, essa extrapolação ficou bem mais frágil: não
+há motivo para supor que uma UHD de entrada receba o mesmo SoC de um OLED evo, e
+o normal na indústria é justamente o contrário.
+
+Um sinal concreto nessa direção: as análises registram **engasgos ao abrir menus
+de configuração mais pesados** do próprio sistema. Isso não é um teste de GPU, mas
+não é o comportamento de um aparelho sobrando desempenho.
+
+Conclusão revisada, e é a honesta: **o risco de desempenho volta a ser alto e
+empatado com o de memória.** A pesquisa não resolveu nem um nem outro.
+
+### O que já dá para decidir com isto
+
+1. **Alvo de 60 FPS, com plano B explícito de 30.** O painel é 60 Hz e o
+   `requestAnimationFrame` está preso ao vsync: não existe 45 FPS estável, quem
+   perde o quadro de 60 cai para 30. O teste da Fase 0 já reporta o orçamento nos
+   dois alvos exatamente por isso.
+2. **Renderizar em 720p deixa de ser aposta e passa a ser a hipótese principal.**
+   Numa TV de entrada, gastar o dobro de pixels para uma imagem que o
+   escalonador da própria LG reconstrói bem é o pior negócio disponível.
+3. **As paletas precisam de validação no painel, não no monitor.** Com 300–350
+   nits, 89% de DCI-P3 e possivelmente IPS (contraste baixo, preto acinzentado),
+   tons pastel próximos entre si tendem a se achatar num borrão. O tema **Nuvem**
+   era o caso mais exposto — todos os blocos ficavam entre 0,66 e 1,00 de valor —
+   e por isso teve a faixa alargada antes mesmo de ir para a TV.
+4. **Ângulo de visão importa mais do que eu suporia.** Criança joga do sofá, de
+   lado, deitada no chão. Se for um tamanho ímpar, o painel é IPS e isso é uma
+   boa notícia: IPS perde contraste mas mantém a cor fora do eixo.
+
 ## Resumo
 
 O quadro é **melhor do que o brainstorm supôs**. A suspeita inicial era de que o

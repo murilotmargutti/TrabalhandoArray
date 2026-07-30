@@ -42,17 +42,21 @@ export const THEMES = [
     },
   },
   {
+    // Faixa de valor alargada de propósito. A versão original mantinha todos os
+    // blocos entre 0,66 e 1,00, o que num painel de 300-350 nits e contraste
+    // baixo (IPS) viraria um borrão claro sem forma reconhecível. Continua sendo
+    // um tema de nuvem; só deixou de depender de diferenças que a TV não mostra.
     name: 'Nuvem',
     sky: [0.72, 0.80, 0.98],
     fog: [0.88, 0.92, 1.00],
     colors: {
-      1: [0.90, 0.93, 1.00],
-      2: [0.76, 0.80, 0.92],
-      3: [0.66, 0.72, 0.88],
-      4: [0.97, 0.97, 1.00],
-      5: [0.70, 0.86, 0.99],
-      6: [0.72, 0.70, 0.86],
-      7: [0.83, 0.88, 1.00],
+      1: [0.95, 0.97, 1.00],
+      2: [0.62, 0.68, 0.86],
+      3: [0.44, 0.52, 0.74],
+      4: [0.99, 0.99, 1.00],
+      5: [0.52, 0.74, 0.98],
+      6: [0.54, 0.52, 0.72],
+      7: [0.76, 0.84, 1.00],
     },
   },
   {

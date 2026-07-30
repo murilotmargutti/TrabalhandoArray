@@ -47,6 +47,7 @@ dizer, o custo é o mesmo.
 | Instalação por devmode | `.ipk` via `ares-package` / `ares-install` | App é 100% estático e offline. A sessão do Developer Mode **expira** e precisa ser renovada no app da LG. |
 | Controle Bluetooth | Já pareado na TV | Risco: o webOS pode entregar o controle pela **Gamepad API** *ou* traduzir os botões em eventos de teclado. Precisa ser testado no aparelho. |
 | Tela de TV | Jogadora a ~3 m de distância | UI "10-foot": fonte grande (≥32px em 1080p), ícones grandes, alvos generosos, nada de texto pequeno. |
+| Aparelho: LG UA8550 | Linha de **entrada** 4K de 2025, painel **60 Hz**, 300–350 nits, Bluetooth 5.0 | 60 FPS é o teto (só 60 ou 30, nada entre). Render em 720p passa a ser a hipótese principal. Paletas precisam de validação no painel. |
 
 ### Consequência mais importante
 
@@ -176,14 +177,14 @@ o controle como teclado, e o Magic Remote continua servindo de emergência.
 
 ## 7. Riscos, em ordem de gravidade
 
-1. **Memória do app no webOS.** Passou a ser o risco número um: o α7 é o nível
-   com menos memória, e malha de chunk é justamente o que ocupa espaço. A LG não
-   publica o limite, e documenta que página grande demais faz a TV encerrar o
-   app ou reiniciar. Mitigação: ilha finita, arrays tipados, descartar malha de
-   chunk fora de vista, e medir com o painel do app mais o Beanviser.
-2. **Configuração da GPU desconhecida.** A Mali-G510 vai de 2 a 6 núcleos de
-   shader e a LG não diz qual usou — três vezes de diferença possível.
-   Mitigação: medir na fase 0; orçamento de chunks definido pela medição.
+1. **Desempenho e memória, empatados.** A UA8550 é a linha de entrada; não há
+   como saber qual SoC ela leva nem quanta memória o app recebe, e a LG bloqueia
+   a leitura dessa informação no próprio aparelho. Mitigação: ilha finita, render
+   em 720p, arrays tipados, descartar malha fora de vista, e medir na fase 0 com
+   o painel do app mais o Beanviser.
+2. **Paleta achatar no painel.** 300–350 nits e possivelmente IPS achatam tons
+   pastel próximos entre si. Mitigação: faixa de valor larga em cada tema (o tema
+   Nuvem já foi corrigido por isso) e conferência dos cinco na TV.
 3. **Controle não aparecer na Gamepad API.** Mitigação: camada de entrada dupla,
    já implementada na fase 0.
 4. **Sessão do Developer Mode expirando** no meio do desenvolvimento.
