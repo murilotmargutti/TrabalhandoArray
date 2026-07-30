@@ -91,6 +91,11 @@ Para ver o console de dentro do app rodando na TV:
 ares-inspect --device tv --app com.murilo.ilhablocos.fase0
 ```
 
+Vale também rodar o **Beanviser**, ferramenta oficial da LG que mede CPU e
+memória do app na TV e detecta vazamento. O painel do app mede o heap de
+JavaScript; o Beanviser mede o processo inteiro, que é o número que realmente
+importa para não ser encerrado por falta de memória.
+
 ## O que medir, e o que anotar
 
 Rode o teste automático (botão **A**, ou Enter) **duas vezes**: uma em

@@ -1,0 +1,106 @@
+# O que se sabe sobre o hardware da TV
+
+Levantamento feito para calibrar o escopo antes de rodar a Fase 0 no aparelho.
+Cada item vem marcado com o grau de confiança, porque a diferença entre "a ARM
+publicou" e "um site de análise deduziu" muda o quanto vale apostar nisso.
+
+## Resumo
+
+O quadro é **melhor do que o brainstorm supôs**. A suspeita inicial era de que o
+α7, sendo a linha intermediária, teria GPU bem mais fraca que o α9. As fontes
+apontam outra coisa: os níveis de processador da LG compartilham praticamente os
+mesmos núcleos, e a diferença real está em **memória** e em blocos de
+processamento de imagem, não em poder de GPU.
+
+Isso desloca o risco em vez de eliminá-lo: a GPU provavelmente dá conta, e a
+**memória** passa a ser a restrição mais provável.
+
+## O que é fato publicado
+
+**A LG desenha os SoCs em parceria com a ARM, e o par usado é Cortex-A78 +
+Mali-G510.** A própria ARM lista "Arm Cortex-A78" e "Arm Mali-G510" como as
+tecnologias empregadas nas TVs OLED da LG, incluindo a família OLED evo 2025
+([arm.com](https://www.arm.com/company/success-library/arm-designs/lg-oled-tv)).
+Para a linha OLED 2024 há a descrição mais completa: **quad-core Cortex-A78 e
+Mali-G510**, comparável a um chip de celular intermediário de 2021 ou 2022
+([engineersgarage](https://www.engineersgarage.com/a-look-inside-the-modern-smart-tv/)).
+
+**A Mali-G510 é a linha "mainstream" da terceira geração Valhall, configurável de
+2 a 6 núcleos de shader**, com cerca de o dobro do desempenho da Mali-G57 que
+substituiu ([arm.com](https://www.arm.com/products/silicon-ip-multimedia/gpu/mali-g510),
+[Android Authority](https://www.androidauthority.com/arm-mali-g710-g610-g510-g310-1225934/),
+[VideoCardz](https://videocardz.com/press-release/arm-announces-mali-g710-g610-g510-and-g310-graphics-processing-units)).
+Traduzindo para referência conhecida: a G57 MP2 fica na faixa da Adreno 618 e a
+MP3 na da Adreno 620, então uma G510 cai aproximadamente na faixa
+**Adreno 620–630** — GPU de celular intermediário de 2021/2022
+([Notebookcheck](https://www.notebookcheck.net/ARM-Mali-G57-MP2-GPU-Benchmarks-and-Specs.537758.0.html)).
+
+**O motor web do webOS 25 é o Chromium 120**, e a LG não atualiza a versão do
+Chromium depois que uma versão maior sai
+([webOS TV Developer](https://webostv.developer.lge.com/develop/specifications/web-api-and-web-engine),
+[notas da comunidade](https://gist.github.com/throwaway96/5648720758e354a018c95150d0bb7fb8)).
+WebGL2 existe no Chrome desde a versão 56, então está garantido com folga.
+
+**O α7 AI Processor 4K Gen8 é a faixa de entrada/intermediária da linha 2025**,
+aparecendo em modelos QNED como o QNED70A e o 55QNED8AA
+([LG Índia](https://www.lg.com/in/tv-soundbars/qned/55qned8aa6a/),
+[TV Reviews](https://tvreviews.net/lg-qned70a-qned70-2025/)). Acima dele ficam o
+α8, o α9 Gen8 e o α11 Gen2 dos OLED evo
+([HomeTechnologyReview](https://hometechnologyreview.com/2025-lg-qned-evo-tvs-ai-upgrades-gaming-features-and-true-wireless-4k/)).
+
+## O que é dedução de terceiros, não fato
+
+**Os níveis α5/α7/α9 usariam os mesmos núcleos de CPU e GPU, diferindo sobretudo
+na quantidade de memória.** É a conclusão do tab-tv, que também registra o motivo
+de ninguém ter certeza: **a LG bloqueia a leitura das informações do processador
+no nível de usuário** — dá para descobrir que há quatro núcleos e nada além disso
+([tab-tv](https://en.tab-tv.com/lg-%CE%B19-intelligent-processor-tv-lg-what-this-processor-is/)).
+É uma dedução plausível e coerente com o resto, mas não é especificação oficial.
+
+**A extrapolação da OLED evo para o α7 Gen8 é minha, não das fontes.** A página da
+ARM cobre a família OLED evo, cujo processador é o α11 Gen2. Dizer que o α7 Gen8
+usa a mesma Mali-G510 é inferência a partir de: (a) a LG usa a mesma família de
+SoC na linha toda, e (b) o tab-tv indica núcleos compartilhados entre níveis.
+
+## O buraco que a pesquisa não fecha
+
+**Quantos núcleos de shader tem a G510 desta TV.** A Mali-G510 vai de 2 a 6
+núcleos, e a LG não publica a configuração. Entre uma MC2 e uma MC6 há três vezes
+de diferença de capacidade — e nada indica que o modelo de entrada receba a
+configuração cheia. Esse é o número que decide a distância de visão do jogo, e
+**nenhuma fonte pública tem ele**.
+
+**Quanta memória o app recebe.** A LG documenta que uma página grande demais faz a
+TV encerrar o navegador ou reiniciar sozinha, mas não publica o limite
+([suporte LG](https://www.lg.com/us/support/help-library/lg-tv-memory-shortage-error-app-wont-run--20154522128317),
+[webOS TV Developer](https://webostv.developer.lge.com/develop/specifications/web-api-and-web-engine)).
+Como o α7 é justamente o nível com menos memória, é aqui que o risco se concentra
+agora.
+
+## O que isso muda no plano
+
+1. **A GPU deixa de ser o risco principal.** Um renderizador de voxel com culled
+   mesh, uma draw call por chunk e nenhuma luz dinâmica, rodando a 720p, é bem
+   dentro do que uma GPU classe Adreno 620 entrega — jogos de bloco rodam nesse
+   nível de hardware há anos. Continua sendo preciso medir, mas a expectativa
+   razoável passou a ser positiva.
+2. **A memória sobe para risco número um.** Malha de chunk é o que ocupa espaço, e
+   é onde o α7 tende a ter menos folga. Reforça duas decisões já tomadas:
+   **ilha finita** e **descarregar malha de chunk fora de vista**. O app da Fase 0
+   já mostra o teto do heap e o total de geometria na GPU exatamente por isso.
+3. **Vale usar o Beanviser**, a ferramenta oficial da LG que mede CPU e memória do
+   app rodando na TV e detecta vazamento
+   ([webOS TV Developer](https://webostv.developer.lge.com/develop/tools/beanviser-introduction)).
+   Ela complementa o painel do app: o painel mede o heap de JavaScript, o
+   Beanviser mede o processo inteiro.
+4. **Identificar o modelo exato da TV ajuda.** Sabendo se é QNED70A, QNED8AA ou
+   outro, dá para procurar teardown e ficha técnica daquele aparelho específico e
+   talvez fechar a questão da memória sem adivinhação.
+
+## Conclusão honesta
+
+A pesquisa estreitou a faixa de incerteza e melhorou o prognóstico, mas **não
+substitui a medição**. Os dois números que definem o escopo — núcleos de shader da
+GPU e memória disponível ao app — a LG não publica, e um deles a própria TV se
+recusa a informar. Rodar a Fase 0 no aparelho continua sendo o único jeito de
+saber.

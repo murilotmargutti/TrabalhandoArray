@@ -43,7 +43,7 @@ dizer, o custo é o mesmo.
 | Restrição | Realidade | Consequência de projeto |
 |---|---|---|
 | webOS 25 | Motor web é **Chromium 120** | Podemos usar TypeScript moderno, WebGL2, IndexedDB, WebAudio. Nada exótico. |
-| Processador α7 AI Gen 8 | GPU modesta (α7 é a linha intermediária, abaixo do α9) | **Este é o maior risco do projeto.** Mundo pequeno, poucas draw calls, zero sombras dinâmicas. |
+| Processador α7 AI Gen 8 | Família ARM Cortex-A78 + Mali-G510; os níveis α5/α7/α9 aparentemente compartilham núcleos e diferem em **memória** | Poucas draw calls e zero sombra dinâmica continuam valendo. Mas o risco principal passou da GPU para a **memória** — ver `docs/HARDWARE.md`. |
 | Instalação por devmode | `.ipk` via `ares-package` / `ares-install` | App é 100% estático e offline. A sessão do Developer Mode **expira** e precisa ser renovada no app da LG. |
 | Controle Bluetooth | Já pareado na TV | Risco: o webOS pode entregar o controle pela **Gamepad API** *ou* traduzir os botões em eventos de teclado. Precisa ser testado no aparelho. |
 | Tela de TV | Jogadora a ~3 m de distância | UI "10-foot": fonte grande (≥32px em 1080p), ícones grandes, alvos generosos, nada de texto pequeno. |
@@ -53,6 +53,11 @@ dizer, o custo é o mesmo.
 Não sabemos quanto essa GPU aguenta até medirmos **na TV**. Por isso a fase 0
 do roteiro é um teste de desempenho no aparelho real, antes de qualquer sistema
 de jogo. Chutar isso é a forma mais fácil de perder duas semanas.
+
+A pesquisa de hardware (`docs/HARDWARE.md`) estreitou a faixa de incerteza e
+melhorou o prognóstico, mas os dois números que decidem o escopo — quantos
+núcleos de shader tem a GPU e quanta memória o app recebe — a LG não publica, e
+um deles a própria TV se recusa a informar.
 
 ## 3. Stack proposta
 
@@ -171,12 +176,16 @@ o controle como teclado, e o Magic Remote continua servindo de emergência.
 
 ## 7. Riscos, em ordem de gravidade
 
-1. **Desempenho na GPU α7.** Mitigação: medir na TV na fase 0; orçamento de
-   chunks visíveis definido pela medição, não pelo desejo.
-2. **Controle não aparecer na Gamepad API.** Mitigação: camada de entrada dupla
-   e teste no aparelho na fase 0.
-3. **Memória do app no webOS.** Heap de app de TV é limitado. Mitigação: arrays
-   tipados, descartar malha de chunk fora de vista, sem vazamento de textura.
+1. **Memória do app no webOS.** Passou a ser o risco número um: o α7 é o nível
+   com menos memória, e malha de chunk é justamente o que ocupa espaço. A LG não
+   publica o limite, e documenta que página grande demais faz a TV encerrar o
+   app ou reiniciar. Mitigação: ilha finita, arrays tipados, descartar malha de
+   chunk fora de vista, e medir com o painel do app mais o Beanviser.
+2. **Configuração da GPU desconhecida.** A Mali-G510 vai de 2 a 6 núcleos de
+   shader e a LG não diz qual usou — três vezes de diferença possível.
+   Mitigação: medir na fase 0; orçamento de chunks definido pela medição.
+3. **Controle não aparecer na Gamepad API.** Mitigação: camada de entrada dupla,
+   já implementada na fase 0.
 4. **Sessão do Developer Mode expirando** no meio do desenvolvimento.
    Mitigação: renovar antes de cada sessão de teste; documentar o passo a passo.
 5. **Escopo.** Voxel engine é fácil de começar e infinita de terminar.
