@@ -1,0 +1,16 @@
+{
+  "id": "com.murilo.ilhablocos.fase0",
+  "version": "0.0.1",
+  "vendor": "Murilo",
+  "type": "web",
+  "main": "index.html",
+  "title": "Fase 0 - Ilha de Blocos",
+  "icon": "icon80.png",
+  "largeIcon": "icon130.png",
+  "iconColor": "#f7a8c4",
+  "bgColor": "#0b1020",
+  "resolution": "1920x1080",
+  "disableBackHistoryAPI": true,
+  "supportPortraitMode": false,
+  "requiredPermissions": []
+}

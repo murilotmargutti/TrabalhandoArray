@@ -206,13 +206,22 @@ Mundo Florido · Cria & Sonha · Ilha da Cerejeira
 
 ---
 
+## Decisões tomadas
+
+- **Estética escolhível pela jogadora**, com os cinco temas de ilha
+  (Cerejeira, Praia, Nuvem, Floresta Mágica, Doceria). Implementado na Fase 0 de
+  forma que trocar de tema custa um upload de uniform e nenhuma malha
+  reconstruída — ver `docs/FASE-0.md`.
+- **Começar pelo navegador**, e não direto na TV. Vale registrar o custo dessa
+  escolha: o navegador do computador **não mede o risco de desempenho**, que é o
+  maior risco do projeto. O app da Fase 0 foi feito para rodar sem alteração nos
+  dois lugares, então essa medição continua disponível a qualquer momento —
+  basta rodar `./scripts/empacotar.sh tv`.
+
 ## Perguntas abertas
 
-1. Estética **escolhível pela jogadora** (recomendado) ou **tema único** já
-   definido?
-2. Ilha finita (recomendado) ou mundo que cresce sem fim?
-3. Alguma criança específica vai testar? Idade exata ajuda a calibrar leitura
+1. Ilha finita (recomendado) ou mundo que cresce sem fim?
+2. Alguma criança específica vai testar? Idade exata ajuda a calibrar leitura
    e dificuldade das ferramentas.
-4. Vamos direto para a Fase 0 no aparelho, ou você prefere primeiro um protótipo
-   rodando no navegador do computador (mais rápido de iterar, mas não mede o
-   risco real)?
+3. Quando rodar a Fase 0 na TV? Enquanto isso não acontecer, a distância de
+   visão e o tamanho da ilha ficam sem número definido.

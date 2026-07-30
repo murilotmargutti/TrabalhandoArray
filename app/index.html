@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920,height=1080,initial-scale=1">
+<title>Fase 0 - Ilha de Blocos</title>
+<!-- Reaproveita o ícone do app: sem isto o navegador pede /favicon.ico e leva 404. -->
+<link rel="icon" href="./icon80.png">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1920px; height: 1080px;
+    overflow: hidden; background: #0b1020;
+    font-family: "LG Smart UI", "Segoe UI", system-ui, sans-serif;
+    color: #fff; cursor: none;
+  }
+  #gl { position: absolute; inset: 0; width: 1920px; height: 1080px; display: block; }
+
+  /* Painéis de diagnóstico. Fonte grande de proposito: TV vista a 3 metros. */
+  .panel {
+    position: absolute;
+    background: rgba(8, 12, 28, 0.82);
+    border: 2px solid rgba(255, 255, 255, 0.16);
+    border-radius: 14px;
+    padding: 18px 22px;
+    font-size: 26px;
+    line-height: 1.45;
+    font-variant-numeric: tabular-nums;
+  }
+  .panel h2 {
+    font-size: 24px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: #f7a8c4; margin-bottom: 10px;
+  }
+  #stats  { top: 28px; left: 28px; min-width: 430px; }
+  #inputs { top: 28px; right: 28px; min-width: 560px; }
+  /* Começa depois do painel de desempenho para os dois não se sobreporem
+     quando a tabela cresce. */
+  #bench  { bottom: 28px; left: 480px; right: 28px; display: none; }
+  #help   { bottom: 28px; right: 28px; max-width: 620px; font-size: 23px; }
+
+  .k { color: #9fb4d8; }
+  .v { color: #fff; font-weight: 600; }
+  .good { color: #7ee08a; }
+  .warn { color: #ffd166; }
+  .bad  { color: #ff8095; }
+  .row { display: flex; justify-content: space-between; gap: 24px; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 24px; }
+  th, td { text-align: right; padding: 5px 14px; }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: #9fb4d8; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,.2); }
+
+  #themeName {
+    position: absolute; top: 28px; left: 50%; transform: translateX(-50%);
+    font-size: 30px; font-weight: 700; padding: 12px 30px;
+    background: rgba(8,12,28,.82); border-radius: 999px;
+    border: 2px solid rgba(255,255,255,.16);
+  }
+  #banner {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 46px; font-weight: 700; text-align: center;
+    padding: 30px 60px; border-radius: 20px;
+    background: rgba(8,12,28,.9); border: 2px solid #f7a8c4;
+    display: none;
+  }
+  .btnhint {
+    display: inline-block; min-width: 34px; text-align: center;
+    padding: 1px 9px; margin-right: 8px;
+    border: 2px solid #9fb4d8; border-radius: 8px;
+    font-size: 20px; font-weight: 700; color: #9fb4d8;
+  }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+  <canvas id="gl"></canvas>
+
+  <div id="themeName">tema</div>
+
+  <div class="panel" id="stats">
+    <h2>Desempenho</h2>
+    <div id="statsBody"></div>
+  </div>
+
+  <div class="panel" id="inputs">
+    <h2>Entrada / Controle</h2>
+    <div id="inputsBody"></div>
+  </div>
+
+  <div class="panel" id="bench">
+    <h2>Resultado do teste</h2>
+    <div id="benchBody"></div>
+  </div>
+
+  <div class="panel" id="help">
+    <h2>Botões</h2>
+    <div><span class="btnhint">A</span>ou<span class="btnhint" style="margin-left:8px">Enter</span>inicia o teste automático</div>
+    <div><span class="btnhint">X</span>troca resolução de render</div>
+    <div><span class="btnhint">Y</span>troca o tema de cor</div>
+    <div><span class="btnhint">B</span>mostra / esconde os painéis</div>
+    <div><span class="btnhint">LB</span><span class="btnhint">RB</span>menos / mais chunks</div>
+    <div>Analógicos ou setas movem a câmera</div>
+  </div>
+
+  <div id="banner"></div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

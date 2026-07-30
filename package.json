@@ -1,0 +1,14 @@
+{
+  "name": "ilha-de-blocos",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Jogo criativo de blocos para TV LG webOS — Fase 0, prova de conceito",
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/servidor.mjs",
+    "icones": "python3 scripts/gerar-icones.py",
+    "verificar": "node scripts/verificar.mjs",
+    "empacotar": "bash scripts/empacotar.sh"
+  },
+  "comentario": "O app em app/ não tem etapa de build e nenhuma dependência de execução: é ES module puro com WebGL2. Playwright é opcional e serve só ao teste de fumaça (npm install --no-save playwright)."
+}
